@@ -1,35 +1,39 @@
 // make menu with button to spawn the dev/testing world
 
-use bevy::prelude::{ResMut, Resource};
+use crate::GameState;
+use bevy::prelude::{NextState, ResMut, Resource, State};
 use bevy_egui::{egui, EguiContexts};
-
-#[derive(Debug, PartialEq)]
-pub enum Worlds {
-    Testing,
-    World1,
-}
 
 #[derive(Resource)]
 pub struct DevUi {
-    pub selected: Worlds,
+    pub state: GameState,
 }
 
 impl DevUi {
     pub fn new() -> Self {
         Self {
-            selected: Worlds::Testing,
+            state: GameState::MainMenu,
         }
     }
 }
 
-pub fn dev_menu(mut contexts: EguiContexts, mut menu: ResMut<DevUi>) {
+pub fn dev_menu(
+    mut contexts: EguiContexts,
+    mut menu: ResMut<DevUi>,
+    mut next_state: ResMut<NextState<GameState>>,
+)
+{
     egui::Window::new("menu").show(contexts.ctx_mut(), |ui| {
-        egui::ComboBox::from_label("World Selector")
-            .selected_text(format!("{:?}", menu.selected)) // todo : change game state to the current selected world.
+        egui::ComboBox::from_label("State Selector")
+            .selected_text(format!("{:?}", menu.state))
             .show_ui(ui, |ui| {
-                ui.selectable_value(&mut menu.selected, Worlds::Testing, "Testing");
-                ui.selectable_value(&mut menu.selected, Worlds::World1, "World1");
-            }
-            );
+                ui.selectable_value(&mut menu.state, GameState::MainMenu, "Main Menu");
+                ui.selectable_value(&mut menu.state, GameState::Loading, "Loading");
+                ui.selectable_value(&mut menu.state, GameState::TestingWorld, "Testing World");
+                ui.selectable_value(&mut menu.state, GameState::World1, "World 1");
+            });
     });
+
+    // switch to the selected state
+    next_state.set(menu.state.clone());
 }
