@@ -7,7 +7,6 @@ use bevy_egui::{egui, EguiContexts};
 pub enum Worlds {
     Testing,
     World1,
-    World2,
 }
 
 #[derive(Resource)]
@@ -25,12 +24,11 @@ impl DevUi {
 
 pub fn dev_menu(mut contexts: EguiContexts, mut menu: ResMut<DevUi>) {
     egui::Window::new("menu").show(contexts.ctx_mut(), |ui| {
-        egui::ComboBox::from_label("Select one!")
-            .selected_text(format!("{:?}", menu.selected))
+        egui::ComboBox::from_label("World Selector")
+            .selected_text(format!("{:?}", menu.selected)) // todo : change game state to the current selected world.
             .show_ui(ui, |ui| {
                 ui.selectable_value(&mut menu.selected, Worlds::Testing, "Testing");
                 ui.selectable_value(&mut menu.selected, Worlds::World1, "World1");
-                ui.selectable_value(&mut menu.selected, Worlds::World2, "World2");
             }
             );
     });
