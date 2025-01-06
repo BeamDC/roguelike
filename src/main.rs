@@ -9,8 +9,8 @@ use crate::ui::DevUiPlugin;
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GameState {
     #[default]
-    MainMenu,
     Loading,
+    MainMenu,
     TestingWorld,
     World1,
 }
